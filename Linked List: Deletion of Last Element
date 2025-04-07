@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+void deleteEnd(struct Node** head) {
+    if (*head == NULL) {
+        printf("The list is empty.\n");
+        return;
+    }
+
+    // If there's only one node
+    if ((*head)->next == NULL) {
+        free(*head);
+        *head = NULL;
+        return;
+    }
+
+    struct Node* secondLast = *head;
+    while (secondLast->next->next != NULL) {
+        secondLast = secondLast->next;
+    }
+
+    // Free the last node
+    free(secondLast->next);
+    secondLast->next = NULL;
+}
+
+void printList(struct Node* head) {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    
+    struct Node* temp = head;
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+void insertStart(struct Node** head, int newData) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = newData;
+    newNode->next = *head;
+    *head = newNode;
+}
+
+int main() {
+    struct Node* head = NULL;
+
+    insertStart(&head, 10);
+    insertStart(&head, 20);
+    insertStart(&head, 30);
+    insertStart(&head, 40);
+
+    printf("Original List: ");
+    printList(head);
+
+    deleteEnd(&head);
+
+    printf("List after deleting the last element: ");
+    printList(head);
+
+    return 0;
+}
